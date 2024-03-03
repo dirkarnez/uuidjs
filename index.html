@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+<script>
+const WORKER_RESOURCE = `
+self.onmessage = (event) => {
+  debugger;
+  postMessage(event.data + " worker" + self.crypto.randomUUID()); // hello worker
+}`;
+
+const blob = new Blob( [ WORKER_RESOURCE ], { type: "application/javascript" } );
+const blobURL = URL.createObjectURL(blob); // -> URL.revokeObjectURL(blobURL);
+const worker = new Worker(blobURL);
+
+worker.onmessage = (event) => { // @arg EventObject - { data: "hello worker" }
+  alert('resp: ' + event.data);
+};
+worker.postMessage('hello');
+</script>
+</body>
+</html>
+
+
